@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>League Classic Items</title>
+    <link rel="stylesheet" href="css.css">
+</head>
+<body>
+
+    <div id="sidebar">
+
+        <div id="filters">
+            <h2>Stats</h2>
+
+            <label>
+                <input type="checkbox" value="Attack Damage">
+                Attack Damage
+            </label>
+
+            <label>
+                <input type="checkbox" value="Critical Strike">
+                Critical Strike
+            </label>
+
+            <label>
+                <input type="checkbox" value="Attack Speed">
+                Attack Speed
+            </label>
+
+            <label>
+                <input type="checkbox" value="On-Hit Effects">
+                On-Hit Effects
+            </label>
+
+            <label>
+                <input type="checkbox" value="Armor Penetration">
+                Armor Penetration
+            </label>
+
+            <label>
+                <input type="checkbox" value="Ability Power">
+                Ability Power
+            </label>
+
+            <label>
+                <input type="checkbox" value="Mana & Regeneration">
+                Mana & Regeneration
+            </label>
+
+            <label>
+                <input type="checkbox" value="Magic Penetration">
+                Magic Penetration
+            </label>
+
+            <label>
+                <input type="checkbox" value="Health & Regeneration">
+                Health & Regeneration
+            </label>
+
+            <label>
+                <input type="checkbox" value="Armor">
+                Armor
+            </label>
+
+            <label>
+                <input type="checkbox" value="Magic Resistance">
+                Magic Resistance
+            </label>
+
+            <label>
+                <input type="checkbox" value="Ability Haste">
+                Ability Haste
+            </label>
+
+            <label>
+                <input type="checkbox" value="Movement">
+                Movement
+            </label>
+
+            <label>
+                <input type="checkbox" value="Life Steal & Vamp">
+                Life Steal & Vamp
+            </label>
+        </div>
+
+        <div id="build-area">
+
+            <div id="build-box"></div>
+
+            <div id="trash-zone">🗑️</div>
+
+            <div id="build-actions">
+                <button id="save-build-button">Spara build</button>
+                <button id="saved-builds-button">Mina builds</button>
+            </div>
+
+            <div id="build-total">
+                <div class="total-cost">Total: 0g</div>
+                <div id="build-stats"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <input type="text" id="item-search" placeholder="Search items..." autocomplete="off">
+
+    <div id="items"></div>
+
+    <script src="js.js"></script>
+
+</body>
+</html>

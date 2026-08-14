@@ -1,0 +1,925 @@
+/* ==================================================
+   GLOBALT
+   ================================================== */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background: #101010;
+    color: #fff;
+}
+
+/* ==================================================
+   VÄNSTER SIDOPANEL
+   ================================================== */
+#sidebar {
+    position: fixed;
+    left: 20px;
+    top: 20px;
+    bottom: 20px;
+    width: 220px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 100;
+    overflow-y: auto;
+    width: 200px;
+}
+
+/* ==================================================
+   STATS / FILTER
+   ================================================== */
+#filters {
+    width: 100%;
+    padding: 10px;
+    background: #303030;
+    border-radius: 10px;
+}
+
+#filters h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+#filters label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+#filters input {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+/* ==================================================
+   ITEMS
+   ================================================== */
+#items {
+    margin-left: 270px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+/* Enskilt item */
+.item {
+    display: inline-block;
+}
+
+/* Container runt itembilden */
+.item-image-container {
+    position: relative;
+    width: 60px;
+    height: 60px;
+}
+
+/* Itembild */
+.item-image {
+    width: 60px;
+    height: 60px;
+    display: block;
+    cursor: pointer;
+    user-select: none;
+}
+
+.item-image:hover {
+    transform: scale(1.05);
+}
+
+/* Pris ovanpå itembilden */
+.item-cost-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 2px 5px;
+    background: rgba(0, 0, 0, 0.65);
+    border-radius: 3px;
+    color: gold;
+    font-size: 12px;
+    font-weight: bold;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+/* ==================================================
+   BUILD BOX
+   ================================================== */
+#build-box {
+    width: 100%;
+    height: 150px;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 8px;
+    align-items: center;
+    justify-items: center;
+    background: #303030;
+    border: 2px dashed green;
+    border-radius: 8px;
+    overflow-y: auto;
+}
+
+/* När man drar ett item över build-boxen */
+#build-box.drag-over {
+    border-color: #303030;
+    background: green;
+}
+
+/* ==================================================
+   ITEMS SOM LIGGER I BUILDEN
+   ================================================== */
+.build-item {
+    position: relative;
+    width: 45px;
+    height: 45px;
+    cursor: grab;
+    user-select: none;
+}
+
+.build-item:active {
+    cursor: grabbing;
+}
+
+.build-item.being-dragged {
+    opacity: 0.4;
+}
+
+
+/* Bilden i builden */
+.build-item-image {
+    width: 50px;
+    height: 50px;
+    display: block;
+}
+
+/* Pris på build-item */
+.build-item-cost {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 2px 5px;
+    background: rgba(0, 0, 0, 0.65);
+    border-radius: 3px;
+    color: gold;
+    font-size: 12px;
+    font-weight: bold;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+
+/* ==================================================
+   SOPTUNNA
+   ================================================== */
+#trash-zone {
+    width: 100%;
+    height: 50px;
+    margin-top: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #303030;
+    border: 2px dashed red;
+    border-radius: 6px;
+    font-size: 20px;
+}
+
+/* När ett item hålls över soptunnan */
+#trash-zone.drag-over {
+    background: red;
+    border-color: #303030;
+}
+
+/* ==================================================
+   ITEM INFORMATION / MODAL
+   ================================================= */
+.item-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+}
+
+/* ==================================================
+INFORMATIONSRUTA / MODAL
+================================================== */
+
+.item-modal {
+    position: relative;
+    width: min(600px, calc(100vw - 40px));
+    max-width: calc(100vw - 40px);
+    max-height: calc(100vh - 40px);
+    padding: 30px;
+    box-sizing: border-box;
+    background: black;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 15px 30px gold;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Stor itembild i informationsrutan */
+.modal-image {
+    width: 80px;
+    height: 80px;
+}
+
+/* Itemnamn */
+.item-modal h2 {
+    margin: 15px 0 10px;
+}
+
+/* Itempris */
+.item-cost {
+    font-weight: bold;
+}
+
+/* Itembeskrivning */
+.item-description {
+    line-height: 1.5;
+    max-width: 500px;
+    margin: 0 auto;
+    text-align: center;
+    overflow-wrap: break-word;
+}
+
+/* Stängknapp */
+.close-button {
+    position: absolute;
+    background: none;
+    top: 10px;
+    right: 15px;
+    border: none;
+    color: red;
+    font-size: 50px;
+    cursor: pointer;
+}
+
+#build-area {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+#build-total {
+    width: 100%;
+    margin-top: 8px;
+    padding: 10px;
+    background: #303030;
+    border-radius: 10px;
+}
+
+.total-cost {
+    margin-bottom: 10px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: gold;
+}
+
+#build-stats {
+    max-height: 180px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding-right: 5px;
+    font-size: 13px;
+}
+
+.build-stat {
+    display: flex;
+    justify-content: space-between;
+    padding: 2px 4px;
+}
+
+/* ==================================================
+   ITEM BUILD TREE
+   ================================================== */
+
+.modal-section {
+    width: 100%;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.modal-section h3 {
+    margin-bottom: 10px;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+
+/* ==================================================
+   BUILDS INTO
+   ================================================== */
+.modal-builds-into {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.modal-builds-into-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 70px;
+    max-width: 70px;
+    flex: 0 0 70px;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.modal-builds-into-item img {
+    width: 50px;
+    height: 50px;
+
+    object-fit: cover;
+
+    border-radius: 4px;
+}
+
+
+.modal-builds-into-item span {
+    margin-top: 5px;
+
+    font-size: 11px;
+
+    text-align: center;
+}
+
+/* ==================================================
+COMPONENTS
+================================================== */
+.modal-components {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.modal-component {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 70px;
+    max-width: 70px;
+    flex: 0 0 70px;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.modal-component img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.modal-component span {
+    margin-top: 5px;
+    font-size: 11px;
+    text-align: center;
+}
+
+/* ==================================================
+ITEM SEARCH
+================================================== */
+
+#item-search {
+    position: sticky;
+    top: 20px;
+    z-index: 50;
+    display: block;
+    width: 250px;
+    max-width: calc(100% - 20px);
+    margin-left: calc(270px + (100% - 270px - 250px) / 2);
+    margin-bottom: 20px;
+    padding: 8px 12px;
+    box-sizing: border-box;
+    border: 1px solid #777;
+    border-radius: 6px;
+    background: #222;
+    color: white;
+    font-size: 14px;
+}
+
+#item-search::placeholder {
+    color: #aaa;
+}
+
+#item-search:focus {
+    outline: none;
+    border-color: gold;
+}
+
+/* ==================================================
+BUILD ACTIONS
+================================================== */
+#build-actions {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+#build-actions button {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    background: #202020;
+    color: white;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+#build-actions button:hover {
+    background: #404040;
+}
+
+#save-build-button {
+    border: 1px solid green;
+}
+
+#saved-builds-button {
+    border: 1px solid gold;
+}
+
+/* ==================================================
+SAVED BUILDS
+================================================== */
+.saved-build-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.saved-build-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background: #202020;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.saved-build-card:hover {
+    background: #303030;
+}
+
+.saved-build-card-info {
+    flex: 1;
+    min-width: 0;
+    text-align: left;
+}
+
+.saved-build-card-name {
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.saved-build-card-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.saved-build-card-items img {
+    width: 40px;
+    height: 40px;
+    border-radius: 3px;
+}
+
+.saved-build-delete {
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: none;
+    color: red;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.saved-build-delete:hover {
+    color: white;
+}
+
+/* ==================================================
+SAVE BUILD FORM
+================================================== */
+.save-build-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.save-build-form label {
+    text-align: left;
+    font-size: 13px;
+}
+
+.save-build-form input,
+.save-build-form textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px;
+    border: 1px solid #555;
+    border-radius: 5px;
+    background: #202020;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+.save-build-form textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.save-build-form input:focus,
+.save-build-form textarea:focus {
+    outline: none;
+    border-color: gold;
+}
+
+.save-build-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.save-build-buttons button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.save-build-confirm {
+    background: green;
+    color: white;
+}
+
+.save-build-cancel {
+    background: #444;
+    color: white;
+}
+
+/* ==================================================
+SAVED BUILD DETAILS
+================================================== */
+.saved-build-detail-items {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 15px 0;
+}
+
+.saved-build-detail-items img {
+    width: 50px;
+    height: 50px;
+    border-radius: 4px;
+}
+
+.saved-build-total {
+    margin: 15px 0;
+    color: gold;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.saved-build-notes {
+    margin-top: 15px;
+    padding: 10px;
+    background: #202020;
+    border-radius: 6px;
+    text-align: left;
+    line-height: 1.5;
+    overflow-wrap: break-word;
+}
+
+.saved-build-detail-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.saved-build-detail-actions button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.load-build-button {
+    background: green;
+    color: white;
+}
+
+.back-builds-button {
+    background: #444;
+    color: white;
+}
+
+.saved-build-stats {
+    max-height: 180px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding-right: 5px;
+    font-size: 13px;
+}
+
+/* ==================================================
+EDIT SAVED BUILD
+================================================== */
+
+.edit-build-modal {
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.edit-build-items {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px;
+    background: #202020;
+    border-radius: 6px;
+    min-height: 60px;
+}
+
+.edit-build-item {
+    position: relative;
+}
+
+.edit-build-item img {
+    width: 50px;
+    height: 50px;
+    display: block;
+}
+
+.edit-remove-item {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: red;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.edit-build-actions {
+    display: flex;
+    justify-content: center;
+    margin: 5px 0 10px;
+}
+
+.edit-add-items-button,
+.edit-step-add-item {
+    padding: 7px 12px;
+    border: 1px solid #555;
+    border-radius: 5px;
+    background: #202020;
+    color: white;
+    cursor: pointer;
+}
+
+
+/* ==================================================
+ITEM PICKER
+================================================== */
+
+.edit-item-picker {
+    width: 500px;
+    max-width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.edit-item-search {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px 10px;
+    margin-bottom: 10px;
+    border: 1px solid #555;
+    border-radius: 6px;
+    background: #202020;
+    color: white;
+}
+
+.edit-item-search:focus {
+    outline: none;
+    border-color: gold;
+}
+
+.edit-item-list {
+    display: grid;
+    grid-template-columns: repeat(
+        auto-fill,
+        minmax(120px, 1fr)
+    );
+    gap: 8px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.edit-picker-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 8px;
+    border-radius: 6px;
+    background: #202020;
+    cursor: pointer;
+}
+
+.edit-picker-item:hover {
+    background: #404040;
+}
+
+.edit-picker-item.selected {
+    outline: 2px solid green;
+}
+
+.edit-picker-item img {
+    width: 45px;
+    height: 45px;
+}
+
+.edit-picker-item span {
+    font-size: 11px;
+    text-align: center;
+}
+
+
+/* ==================================================
+BUILD PATH
+================================================== */
+
+.saved-build-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.saved-build-step {
+    padding: 10px;
+    background: #202020;
+    border-radius: 7px;
+}
+
+.saved-build-step-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.saved-build-step-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.saved-build-step-items img {
+    width: 45px;
+    height: 45px;
+}
+
+.saved-build-step-notes {
+    margin-top: 8px;
+    padding: 7px;
+    background: #303030;
+    border-radius: 5px;
+    text-align: left;
+    font-size: 12px;
+}
+
+.edit-step-button {
+    padding: 4px 8px;
+    border: none;
+    border-radius: 4px;
+    background: #404040;
+    color: white;
+    cursor: pointer;
+}
+
+.add-build-step-button {
+    margin-top: 8px;
+    padding: 7px 12px;
+    border: 1px solid green;
+    border-radius: 5px;
+    background: #202020;
+    color: white;
+    cursor: pointer;
+}
+
+.delete-step-button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    background: #602020;
+    color: white;
+    cursor: pointer;
+}
+
+.save-step-button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    background: green;
+    color: white;
+    cursor: pointer;
+}
+
+/* ==================================================
+BUILD PATH TOTAL
+================================================== */
+
+.saved-build-step-total {
+    margin-top: 8px;
+    margin-bottom: 6px;
+    text-align: center;
+    color: gold;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+/* ==================================================
+BUILD PATH STEP ACTIONS
+================================================== */
+.saved-build-step-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+
+.saved-build-step-actions button {
+    padding: 3px 7px;
+    border: none;
+    border-radius: 4px;
+    background: #404040;
+    color: white;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+
+.saved-build-step-actions button:hover {
+    background: #555;
+}
+
+
+.move-step-up-button,
+.move-step-down-button {
+    font-weight: bold;
+    font-size: 15px !important;
+}
